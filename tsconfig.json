@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "ES2019",
+        "module": "CommonJS",
+        "sourceMap": true,
+        "moduleResolution": "Node",
+        "outDir": "dist",
+    },
+    "files":["src/app.ts"],
+}
