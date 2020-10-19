@@ -1,23 +1,32 @@
+import { ChannelIdentifier } from './ChannelIdentifier';
 import { ChannelLinker } from './ChannelLinker';
 import config from './config';
+import { DiscordChannel } from './DiscordChannel';
+import { DiscordClient } from './DiscordClient';
+import { GroupMeChannel } from './GroupMeChannel';
 import { GroupMeClient } from './GroupMeClient';
 
-async function thing(){
-    let linker = await ChannelLinker.new(
-        config.discord.token,
-        new GroupMeClient(config.listenPort, config.groupme.callbackURL)
-    );
-    
-    let promises:Promise<void>[] = [];
-    for(let x of config.servers){
-        promises.push(linker.link(x.discord.guildId, x.discord.channelId, x.groupme.botId, x.groupme.groupId));
-    }
+let linker : ChannelLinker;
 
-    await Promise.all(promises);
+(async ()=>{
+    let groupMeClient = new GroupMeClient(config.listenPort, config.groupme.callbackURL);
+    let discordClient = await DiscordClient.connect(config.discord.token);
 
-}
-try{
-    thing();
-}catch(e){
-    console.error(e);
-}
+
+    linker = new ChannelLinker(discordClient, groupMeClient);
+
+    await Promise.all(config.servers.map(async server=>{
+        let discordChannelId : ChannelIdentifier<DiscordChannel> = {
+            guildId: server.discord.guildId,
+            channelId: server.discord.channelId
+        };
+
+        let groupMeChannelId : ChannelIdentifier<GroupMeChannel> = {
+            botId: server.groupme.botId,
+            channelId: server.groupme.groupId
+        };
+
+        await linker.link(discordChannelId, groupMeChannelId);
+    }));
+
+})().catch(console.error);

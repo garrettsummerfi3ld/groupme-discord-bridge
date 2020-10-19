@@ -1,30 +1,42 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 import { Express } from 'express';
-import { GroupMe } from "./GroupMe";
+import { AttachmentData } from './AttachmentType';
+import { GenericClient } from './GenericClient';
+import { GroupMeChannel } from "./GroupMeChannel";
+import { MessagePayload } from './MessagePayload';
 
-export class GroupMeClient {
+export class GroupMeClient extends GenericClient<GroupMeChannel>{
     private expressApp: Express;
-    private chatMap: { [groupId: string]: GroupMe; };
 
     constructor(port: Number, callbackURL: string) {
+        super();
         this.expressApp = express();
         this.expressApp.use(bodyParser.json());
         this.expressApp.listen(port, () => console.log("Listening for GroupMe messages on port " + port));
-        this.chatMap = {};
+
+        // listen for messages from the groupme server
         this.expressApp.post(callbackURL, (req, res) => {
+
             let groupId = req.body.group_id;
             if (req.body.sender_type == "bot" || req.body.system)
                 return;
-            if (groupId in this.chatMap) {
-                this.chatMap[groupId].messageReceived(req.body.name, req.body.text, req.body.attachments);
+            if (this.has(groupId)) {
+                let message:MessagePayload = {
+                    sender: req.body.name,
+                    messageText: req.body.text,
+                    attachments: !req.body.attachments?[]:req.body.attachments.map(x=>({
+                        type: x.type,
+                        url: x.url
+                    })) as AttachmentData[]
+                };
+                this.sendMessageTo(groupId,message);
             }
         });
     }
 
-    public getChannel(botId: string, groupId: string) : GroupMe {
-        let groupChat = new GroupMe(botId);
-        this.chatMap[groupId] = groupChat;
+    protected async resolveChannel(id: { botId: string; channelId: string; }): Promise<GroupMeChannel> {
+        let groupChat = new GroupMeChannel(id.botId);
         return groupChat;
     }
 }
