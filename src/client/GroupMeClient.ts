@@ -32,7 +32,7 @@ export class GroupMeClient extends GenericClient<GroupMeChannel>{
                             url: x.url
                         });
 
-                        return x;
+                        return attachment;
                     })
                 };
                 this.messageReceived(groupId, message);
