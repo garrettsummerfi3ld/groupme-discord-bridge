@@ -9,6 +9,7 @@ import { GroupMeClient } from './client/GroupMeClient';
 let linker : ChannelLinker;
 
 (async ()=>{
+    console.log("Starting");
     let groupMeClient = new GroupMeClient(config.listenPort, config.groupme.callbackURL);
     let discordClient = await DiscordClient.connect(config.discord.token);
 
