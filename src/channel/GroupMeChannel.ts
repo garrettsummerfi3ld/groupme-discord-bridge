@@ -14,9 +14,8 @@ export class GroupMeChannel extends GenericChannel {
     }
 
     async sendMessage(message: MessagePayload) {
-        let gmAttachments : AttachmentGroupMePayload[];
+        let gmAttachments : AttachmentGroupMePayload[] = [];
 
-        console.log(message.messageText.length);
 
         await Promise.all(message.attachments.map(async attachmentData=>{
             let gmAttachment = await attachmentData.uploadToGroupMe();
