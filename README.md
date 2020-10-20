@@ -21,7 +21,7 @@ Now you can run ```npm start```. It should error out saying you don't have a con
     "accessToken": "",
     "callbackURL": "/callback"
   },
-  "servers": [
+  "bridges": [
     {
       "name": "GEOS 1303",
       "discord": {
@@ -51,7 +51,7 @@ Next you will need to create a Discord bot account on the Discord developers pag
     "accessToken": "",
     "callbackURL": "/callback"
   },
-  "servers": [
+  "bridges": [
     {
       "name": "GEOS 1303",
       "discord": {
@@ -79,7 +79,7 @@ Now you will need the Guild and Channel IDs for the Discord side. In Discord you
     "accessToken": "",
     "callbackURL": "/callback"
   },
-  "servers": [
+  "bridges": [
     {
       "name": "GEOS 1303",
       "discord": {
@@ -115,7 +115,7 @@ Once you've created the GroupMe bot, copy it's "bot ID" and paste it in ```confi
     "accessToken": "YOUR GROUPME ACCESS TOKEN",
     "callbackURL": "/callback"
   },
-  "servers": [
+  "bridges": [
     {
       "name": "GEOS 1303",
       "discord": {
@@ -150,7 +150,7 @@ Hello gamers. Let's say that you have 2+ different discord channels that you wan
     "accessToken": "YOUR GROUPME ACCESS TOKEN",
     "callbackURL": "/callback"
   },
-  "servers": [
+  "bridges": [
     {
       "name": "GEOS 1303",
       "discord": {
