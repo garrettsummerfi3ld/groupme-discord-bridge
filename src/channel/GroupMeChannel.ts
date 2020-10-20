@@ -30,7 +30,7 @@ export class GroupMeChannel extends GenericChannel {
             messageText = `<${message.sender}> ${message.messageText}`;
         }
 
-        if(gmAttachments.length == 0)
+        if(gmAttachments.length == 0 && message.messageText.length==0)
             return;
     
         let options = {
