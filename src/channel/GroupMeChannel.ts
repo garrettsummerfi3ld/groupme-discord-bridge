@@ -19,7 +19,8 @@ export class GroupMeChannel extends GenericChannel {
 
         await Promise.all(message.attachments.map(async attachmentData=>{
             let gmAttachment = await attachmentData.uploadToGroupMe();
-            gmAttachments.push(gmAttachment);
+            if(gmAttachment != "invalid")
+                gmAttachments.push(gmAttachment);
         }));
 
         let messageText = "";
