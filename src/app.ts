@@ -10,6 +10,7 @@ let linker : ChannelLinker;
 
 (async ()=>{
     console.log("Starting");
+    console.log("Starting it up");
     let groupMeClient = new GroupMeClient(config.listenPort, config.groupme.callbackURL);
     let discordClient = await DiscordClient.connect(config.discord.token);
 
