@@ -24,9 +24,9 @@ export class GroupMeChannel extends GenericChannel {
 
         let messageText = "";
         if(message.messageText.length == 0){
-            messageText = `<${message.sender}> ${message.messageText}`;
-        }else{
             messageText = `<${message.sender} sent an image>`;
+        }else{
+            messageText = `<${message.sender}> ${message.messageText}`;
         }
     
         let options = {
