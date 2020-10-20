@@ -17,8 +17,8 @@ export abstract class GenericClient<T extends GenericChannel> {
 
     protected abstract resolveChannel(id: ChannelIdentifier<T>): Promise<T>;
 
-    protected async sendMessageTo(channelId: string, message:MessagePayload) {
-        this.channelMap[channelId].sendMessage(message);
+    protected async messageReceived(channelId: string, message:MessagePayload) {
+        this.channelMap[channelId].messageReceived(message);
     }
 
     protected has(channelId: string){

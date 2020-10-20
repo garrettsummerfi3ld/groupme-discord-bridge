@@ -30,7 +30,7 @@ export class GroupMeClient extends GenericClient<GroupMeChannel>{
                         url: x.url
                     })) as AttachmentData[]
                 };
-                this.sendMessageTo(groupId,message);
+                this.messageReceived(groupId,message);
             }
         });
     }

@@ -15,7 +15,7 @@ export class DiscordClient extends GenericClient<DiscordChannel>{
         this.cilent = discordClient;
         this.cilent.on('message', msg => {
             if (this.has(msg.channel.id) && msg.author.bot == false) {
-                this.sendMessageTo(msg.channel.id, {
+                this.messageReceived(msg.channel.id, {
                     messageText: msg.cleanContent?msg.cleanContent:"",
                     sender: msg.author.username,
                     attachments: msg.attachments.map(x=>new AttachmentData(x))
