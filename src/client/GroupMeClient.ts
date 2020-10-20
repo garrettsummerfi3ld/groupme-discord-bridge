@@ -22,15 +22,20 @@ export class GroupMeClient extends GenericClient<GroupMeChannel>{
             if (req.body.sender_type == "bot" || req.body.system)
                 return;
             if (this.has(groupId)) {
-                let message:MessagePayload = {
+                let message: MessagePayload = {
                     sender: req.body.name,
                     messageText: req.body.text,
-                    attachments: !req.body.attachments?[]:req.body.attachments.map(x=>({
-                        type: x.type,
-                        url: x.url
-                    })) as AttachmentData[]
+                    attachments: !req.body.attachments ? [] : req.body.attachments.map(x => {
+
+                        let attachment = new AttachmentData({
+                            type: x.type,
+                            url: x.url
+                        });
+
+                        return x;
+                    })
                 };
-                this.messageReceived(groupId,message);
+                this.messageReceived(groupId, message);
             }
         });
     }
