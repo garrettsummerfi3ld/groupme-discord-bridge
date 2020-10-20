@@ -29,6 +29,9 @@ export class GroupMeChannel extends GenericChannel {
         }else{
             messageText = `<${message.sender}> ${message.messageText}`;
         }
+
+        if(gmAttachments.length == 0)
+            return;
     
         let options = {
             method: 'POST',
