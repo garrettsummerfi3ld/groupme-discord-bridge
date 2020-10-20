@@ -1,10 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 import { Express } from 'express';
-import { AttachmentData } from './AttachmentType';
+import { AttachmentData } from '../channel/Attachment';
 import { GenericClient } from './GenericClient';
-import { GroupMeChannel } from "./GroupMeChannel";
-import { MessagePayload } from './MessagePayload';
+import { GroupMeChannel } from "../channel/GroupMeChannel";
+import { MessagePayload } from '../channel/MessagePayload';
 
 export class GroupMeClient extends GenericClient<GroupMeChannel>{
     private expressApp: Express;

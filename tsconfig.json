@@ -6,5 +6,5 @@
         "moduleResolution": "Node",
         "outDir": "dist",
     },
-    "files":["src/app.ts", "./src/AttachmentType.ts", "./src/DiscordChannel.ts", "./src/DiscordClient.ts", "./src/MessagePayload.ts", "./src/GenericClient.ts", "./src/ChannelIdentifier.ts"],
+    "files":["src/app.ts", "src/channel/Attachment.ts", "src/channel/DiscordChannel.ts", "src/client/DiscordClient.ts", "src/channel/MessagePayload.ts", "src/client/GenericClient.ts", "src/channel/ChannelIdentifier.ts", "src/channel/GenericChannel.ts"],
 }

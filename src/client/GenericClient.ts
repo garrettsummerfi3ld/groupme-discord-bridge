@@ -1,5 +1,6 @@
-import { ChannelIdentifier } from './ChannelIdentifier';
-import { GenericChannel, MessagePayload } from './MessagePayload';
+import { ChannelIdentifier } from '../channel/ChannelIdentifier';
+import { MessagePayload } from '../channel/MessagePayload';
+import { GenericChannel } from "../channel/GenericChannel";
 
 export abstract class GenericClient<T extends GenericChannel> {
     private channelMap: { [channelId: string]: T; };

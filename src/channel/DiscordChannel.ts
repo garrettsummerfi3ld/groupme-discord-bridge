@@ -1,5 +1,6 @@
 import { TextChannel } from 'discord.js';
-import { GenericChannel, MessagePayload } from './MessagePayload';
+import { MessagePayload } from './MessagePayload';
+import { GenericChannel } from "./GenericChannel";
 
 export class DiscordChannel extends GenericChannel {
     private textChannel: TextChannel;

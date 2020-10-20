@@ -9,7 +9,7 @@ export type Config = {
         accessToken: string;
         callbackURL: string;
     };
-    servers: [
+    bridges: [
         {
             name: string,
             discord:{
@@ -33,7 +33,7 @@ const defaultConfig: Config = {
         accessToken: "",
         callbackURL: "/callback",
     },
-    servers:[
+    bridges:[
         {
             name: "GEOS 1303",
             discord:{

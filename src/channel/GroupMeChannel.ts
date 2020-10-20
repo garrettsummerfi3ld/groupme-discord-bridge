@@ -1,6 +1,7 @@
 import { promises } from "fs";
-import { AttachmentGroupMePayload } from "./AttachmentType";
-import { GenericChannel, MessagePayload } from "./MessagePayload";
+import { AttachmentGroupMePayload } from "./Attachment";
+import { MessagePayload } from "./MessagePayload";
+import { GenericChannel } from "./GenericChannel";
 
 const request = require("request-promise");
 

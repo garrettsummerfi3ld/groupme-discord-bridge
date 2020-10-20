@@ -1,6 +1,6 @@
 import { MessageAttachment } from 'discord.js';
-import config from './config';
-import { download } from './download';
+import config from '../config';
+import { download } from '../util/download';
 import * as fs from 'fs';
 import * as request from 'request-promise';
 const uuidv1 = require("uuid/v1");

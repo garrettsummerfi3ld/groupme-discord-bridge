@@ -1,10 +1,10 @@
-import { ChannelIdentifier } from './ChannelIdentifier';
-import { ChannelLinker } from './ChannelLinker';
+import { ChannelIdentifier } from './channel/ChannelIdentifier';
+import { ChannelLinker } from './bridge/ChannelLinker';
 import config from './config';
-import { DiscordChannel } from './DiscordChannel';
-import { DiscordClient } from './DiscordClient';
-import { GroupMeChannel } from './GroupMeChannel';
-import { GroupMeClient } from './GroupMeClient';
+import { DiscordChannel } from './channel/DiscordChannel';
+import { DiscordClient } from './client/DiscordClient';
+import { GroupMeChannel } from './channel/GroupMeChannel';
+import { GroupMeClient } from './client/GroupMeClient';
 
 let linker : ChannelLinker;
 
@@ -15,7 +15,7 @@ let linker : ChannelLinker;
 
     linker = new ChannelLinker(discordClient, groupMeClient);
 
-    await Promise.all(config.servers.map(async server=>{
+    await Promise.all(config.bridges.map(async server=>{
         let discordChannelId : ChannelIdentifier<DiscordChannel> = {
             guildId: server.discord.guildId,
             channelId: server.discord.channelId

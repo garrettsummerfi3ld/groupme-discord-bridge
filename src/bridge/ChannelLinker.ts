@@ -1,17 +1,17 @@
-import { ChannelIdentifier } from './ChannelIdentifier';
-import { DiscordChannel } from './DiscordChannel';
-import { DiscordClient } from './DiscordClient';
-import { GroupMeChannel } from './GroupMeChannel';
-import { GroupMeClient } from './GroupMeClient';
-import { Link } from './Link';
+import { ChannelIdentifier } from '../channel/ChannelIdentifier';
+import { DiscordChannel } from '../channel/DiscordChannel';
+import { GroupMeChannel } from '../channel/GroupMeChannel';
+import { GroupMeClient } from '../client/GroupMeClient';
+import {DiscordClient} from '../client/DiscordClient';
+import { Bridge } from './Bridge';
 
 export class ChannelLinker {
     private discordClient: DiscordClient;
     private groupMeClient: GroupMeClient;
-    private links : Link[];
+    private bridges : Bridge[];
 
     public constructor(discordClient: DiscordClient, groupMeClient: GroupMeClient) {
-        this.links = [];
+        this.bridges = [];
         this.discordClient = discordClient;
         this.groupMeClient = groupMeClient;
     }
@@ -20,7 +20,7 @@ export class ChannelLinker {
         let discordChannel = await this.discordClient.getChannel(discordId);
         let groupMeChannel = await this.groupMeClient.getChannel(groupMeId);
 
-        let link = new Link(discordChannel, groupMeChannel);
-        this.links.push(link);
+        let bridge = new Bridge(discordChannel, groupMeChannel);
+        this.bridges.push(bridge);
     }
 }

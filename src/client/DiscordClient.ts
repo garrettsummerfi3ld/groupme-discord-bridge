@@ -1,8 +1,8 @@
 import { Client, TextChannel } from 'discord.js';
-import { AttachmentData } from './AttachmentType';
-import { ChannelIdentifier } from './ChannelIdentifier';
-import { DiscordChannel } from './DiscordChannel';
-import { GenericChannel } from './MessagePayload';
+import { AttachmentData } from '../channel/Attachment';
+import { ChannelIdentifier } from '../channel/ChannelIdentifier';
+import { DiscordChannel } from '../channel/DiscordChannel';
+import { GenericChannel } from "../channel/GenericChannel";
 import {GenericClient} from './GenericClient';
 
 
@@ -10,7 +10,7 @@ export class DiscordClient extends GenericClient<DiscordChannel>{
 
     private cilent: Client;
 
-    private constructor(discordClient) {
+    private constructor(discordClient : Client) {
         super();
         this.cilent = discordClient;
         this.cilent.on('message', msg => {

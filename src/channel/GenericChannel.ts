@@ -1,10 +1,5 @@
-import { AttachmentData } from "./AttachmentType";
+import { MessagePayload } from "./MessagePayload";
 
-export type MessagePayload = {
-    sender: string;
-    messageText: string;
-    attachments: AttachmentData[];
-};
 type MessageCallback = (message: MessagePayload) => Promise<any>;
 export abstract class GenericChannel {
     abstract sendMessage(message: MessagePayload): Promise<any>;

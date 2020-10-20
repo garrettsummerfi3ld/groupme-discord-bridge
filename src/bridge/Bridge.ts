@@ -1,8 +1,8 @@
-import { GroupMeChannel } from "./GroupMeChannel";
-import { DiscordChannel } from './DiscordChannel';
-import { MessagePayload } from './MessagePayload';
+import { GroupMeChannel } from "../channel/GroupMeChannel";
+import { DiscordChannel } from '../channel/DiscordChannel';
+import { MessagePayload } from '../channel/MessagePayload';
 
-export class Link {
+export class Bridge {
     private discordChannel: DiscordChannel;
     private groupMeChannel: GroupMeChannel;
 
