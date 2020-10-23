@@ -2,10 +2,12 @@ import { DiscordChannel } from './DiscordChannel';
 import { GenericChannel } from "./GenericChannel";
 
 
-export type ChannelIdentifier<T extends GenericChannel> = T extends DiscordChannel ? {
-    guildId: string;
-    channelId: string;
+// used to access a dc channel or gm group
+export type ChannelIdentifier<T extends GenericChannel> = T extends DiscordChannel ?
+{
+    guildId: string;        // for discord
+    channelId: string;      // channels
 } : {
-    botId: string;
-    channelId: string;
+    botId: string;          // for groupme
+    channelId: string;      // groups
 };

@@ -28,3 +28,17 @@ export async function download(url: string, filename: string): Promise<DownloadR
         });
     });
 }
+
+export async function getFileSize(pathname: string):Promise<Number>{
+    return new Promise((resolve, reject)=>{
+        // get a "stat" object corresponding to the file in the filesystem
+        fs.stat(pathname, async (err, stats) => {
+            if (err) {
+                reject(err);
+            }
+
+            // return the size (stats.size)
+            resolve(stats.size);
+        });
+    });
+}

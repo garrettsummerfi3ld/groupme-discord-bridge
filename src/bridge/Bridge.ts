@@ -2,6 +2,7 @@ import { GroupMeChannel } from "../channel/GroupMeChannel";
 import { DiscordChannel } from '../channel/DiscordChannel';
 import { MessagePayload } from '../channel/MessagePayload';
 
+/** Responsible for linking together a single discord channel with a single groupme group */
 export class Bridge {
     private discordChannel: DiscordChannel;
     private groupMeChannel: GroupMeChannel;
@@ -18,10 +19,12 @@ export class Bridge {
     }
 
     async discordMessageReceived(message: MessagePayload) {
+        // when we read a message from discord, send it to the groupme group
         this.groupMeChannel.sendMessage(message);
     }
 
     async groupMeMessageReceived(message: MessagePayload) {
+        // when we read a message from groupme, send it to the discord group
         this.discordChannel.sendMessage(message);
     }
 };
