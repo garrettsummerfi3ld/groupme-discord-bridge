@@ -14,6 +14,7 @@ try {
     // Already exists
 }
 
+/** Downloads from a URL into a specified file */
 export async function download(url: string, filename: string): Promise<DownloadResults> {
     return new Promise((resolve) => {
         request.head(url, (err: string, res: any, body: any) => {
