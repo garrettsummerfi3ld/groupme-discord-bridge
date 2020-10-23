@@ -36,6 +36,8 @@ export class AttachmentData {
     /** This constructor will throw errors for non-image attachments! */
     public constructor(attachment: MessageAttachment | {url: string; }){
 
+        console.log(attachment.url);
+
         // if it isn't an image, throw an error
         if (!attachmentIsImage(attachment)) {
             throw new InvalidAttachmentError();
