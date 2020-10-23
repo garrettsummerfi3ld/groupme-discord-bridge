@@ -41,7 +41,7 @@ export class DiscordClient extends GenericClient<DiscordChannel>{
         // call the inherited messageReceived method so that it can handle the new message and send it on its way
         this.messageReceived(msg.channel.id, {
             messageText: msg.cleanContent?msg.cleanContent:"",
-            sender: msg.author.username,
+            sender: msg.member.nickname ? msg.member.nickname : msg.author.username,
             attachments: msg.attachments.mapValues(x=>x)
                                         .filter(attachmentIsImage)
                                         .map(x=>new AttachmentData(x))
