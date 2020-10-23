@@ -21,11 +21,34 @@ export type AttachmentDiscordPayload= {
     cleanup: () => void;
 } | { url: string; };
 
+
+// tests GroupMe static image URLs
+// they're kinda quirky tho
+const gmRe = /^https?:\/\/i.groupme.com\/[A-Za-z0-9]+\.([A-Za-z0-9]+)\.[A-Za-z0-9]+$/m;
+
+// any URL that ends with a file extension
+const dcRe = /.+\.([A-Za-z0-9]+)$/m;
+
+function getFileExtension(url: string) : string{
+    // test for a groupme formatted URL
+    let result = gmRe.exec(url);
+    if(result)
+        return result[1];
+    
+    // test for a discord formatted URL
+    result = dcRe.exec(url);
+    if(result)
+        return result[1];
+    
+    return "";
+}
+
 const IMAGE_EXT = ["jpeg", "jpg", "png", "gif"];
 
+/** return true iff the URL has an image file extension*/
 export function attachmentIsImage(attachment: {url: string}) : boolean{
-    console.log(attachment.url);
-    return IMAGE_EXT.some(x => attachment.url.endsWith(x));
+    let fileExt = getFileExtension(attachment.url);
+    return IMAGE_EXT.some(x => x==fileExt);
 }
 
 /** used to store the original of an attachment */
@@ -84,9 +107,9 @@ export class AttachmentData {
     public async toDiscordAttachment(): Promise<AttachmentDiscordPayload> {
 
         // download this file, and keep track of its filename
-        let array = this.url.split(".");
-        let filename = this.name + "." + array[array.length - 2];
-        let { contentType, downloadLocation } = await download(this.url, this.name);
+        let fileExtension = getFileExtension(this.url);
+        let filename = this.name + "." + fileExtension;
+        let { contentType, downloadLocation } = await download(this.url, filename);
 
         let size = await getFileSize(downloadLocation);
 
