@@ -5,6 +5,7 @@ import { GroupMeClient } from '../client/GroupMeClient';
 import {DiscordClient} from '../client/DiscordClient';
 import { Bridge } from './Bridge';
 
+/** Creates bridges. It requires a groupme + discord client to listen to incoming messages */
 export class ChannelLinker {
     private discordClient: DiscordClient;
     private groupMeClient: GroupMeClient;
@@ -16,6 +17,7 @@ export class ChannelLinker {
         this.groupMeClient = groupMeClient;
     }
 
+    /** Create a new bridge between a discord channel and a GM group */
     public async link(discordId: ChannelIdentifier<DiscordChannel>, groupMeId: ChannelIdentifier<GroupMeChannel>) {
         let discordChannel = await this.discordClient.getChannel(discordId);
         let groupMeChannel = await this.groupMeClient.getChannel(groupMeId);

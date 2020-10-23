@@ -1,45 +1,78 @@
-import { Client, TextChannel } from 'discord.js';
-import { AttachmentData } from '../channel/Attachment';
+import { Client as DC_Client, Message as DC_Message, TextChannel as DC_TextChannel } from 'discord.js';
+import { AttachmentData, attachmentIsImage } from '../channel/Attachment';
 import { ChannelIdentifier } from '../channel/ChannelIdentifier';
 import { DiscordChannel } from '../channel/DiscordChannel';
 import { GenericChannel } from "../channel/GenericChannel";
+import { ErrorHandler } from '../util/ErrorHandler';
 import {GenericClient} from './GenericClient';
 
-
+/** This corresponds to a discord bot. One discord bot can exist in many channels */
 export class DiscordClient extends GenericClient<DiscordChannel>{
 
-    private cilent: Client;
+    /** Interface between us and the discord bot */
+    private cilent: DC_Client;
 
-    private constructor(discordClient : Client) {
+    private errorHandler: ErrorHandler;
+
+    private constructor(discordClient : DC_Client, errorHandler:ErrorHandler) {
         super();
         this.cilent = discordClient;
-        this.cilent.on('message', msg => {
-            if (this.has(msg.channel.id) && msg.author.bot == false) {
-                this.messageReceived(msg.channel.id, {
-                    messageText: msg.cleanContent?msg.cleanContent:"",
-                    sender: msg.author.username,
-                    attachments: msg.attachments.map(x=>new AttachmentData(x))
-                }).catch(x => {
-                    throw x;
-                });
-            }
-        });
+        this.errorHandler = errorHandler;
+
+        this.handleIncomingMessage = this.handleIncomingMessage.bind(this);
+
+        // make the client listen for messages on all channels
+        // then we'll handle them in the method below
+        this.cilent.on('message', this.handleIncomingMessage);
+        this.cilent.on('error', errorHandler);
+    }
+    
+    /** called any time anybody sends a message on any discord channel the bot is in */
+    private handleIncomingMessage(msg: DC_Message){
+        
+        // make sure that the discord channel is in our system
+        if(!this.has(msg.channel.id))
+            return;
+        
+        // make sure that the sender is not a bot
+        if(msg.author.bot)
+            return;
+
+        // call the inherited messageReceived method so that it can handle the new message and send it on its way
+        this.messageReceived(msg.channel.id, {
+            messageText: msg.cleanContent?msg.cleanContent:"",
+            sender: msg.author.username,
+            attachments: msg.attachments.mapValues(x=>x)
+                                        .filter(attachmentIsImage)
+                                        .map(x=>new AttachmentData(x))
+        }).catch(this.errorHandler);
     }
 
-    public static async connect(discordToken: string): Promise<DiscordClient> {
+    /** Instantiate a new discord client */
+    public static async connect(discordToken: string, errorHandler:ErrorHandler): Promise<DiscordClient> {
         return new Promise((resolve, reject) => {
-            let client: Client = new Client();
+            
+            // create the client object & login
+            let client: DC_Client = new DC_Client();
             client.login(discordToken).catch(reject);
+
+            // once it's loaded, return it
             client.on("ready", () => {
-                resolve(new DiscordClient(client));
+                client.removeListener('error', errorHandler);
+                resolve(new DiscordClient(client, errorHandler));
             });
+            client.addListener('error', errorHandler);
         });
     }
 
+    // return a discord channel based on a channel identifier
     protected async resolveChannel(channelIdentifier:ChannelIdentifier<DiscordChannel>) : Promise<DiscordChannel>{
+        // get the guild..
         let guild = await this.cilent.guilds.fetch(channelIdentifier.guildId);
-        let channel = guild.channels.resolve(channelIdentifier.channelId) as TextChannel;
+        // find the channel in the guild..
+        let channel = guild.channels.resolve(channelIdentifier.channelId) as DC_TextChannel;
 
+        // return the channel
         return new DiscordChannel(channel); 
     }
 }

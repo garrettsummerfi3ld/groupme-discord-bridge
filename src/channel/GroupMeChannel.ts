@@ -6,6 +6,8 @@ import { GenericChannel } from "./GenericChannel";
 const request = require("request-promise");
 
 export class GroupMeChannel extends GenericChannel {
+
+    // You need to put a different bot in each Groupme channel
     private botId: string;
 
     constructor(botId: string) {
@@ -13,16 +15,15 @@ export class GroupMeChannel extends GenericChannel {
         this.botId = botId;
     }
 
+    // broadcast message to the groupme channel
     async sendMessage(message: MessagePayload) {
-        let gmAttachments : AttachmentGroupMePayload[] = [];
 
+        // upload all the attachments
+        let gmAttachments = await Promise.all(
+            message.attachments.map(attachment => attachment.uploadToGroupMe())
+        );
 
-        await Promise.all(message.attachments.map(async attachmentData=>{
-            let gmAttachment = await attachmentData.uploadToGroupMe();
-            if(gmAttachment != "invalid")
-                gmAttachments.push(gmAttachment);
-        }));
-
+        // create the text part of the message
         let messageText = "";
         if(message.messageText.length == 0){
             messageText = `<${message.sender} sent an image>`;
@@ -30,9 +31,11 @@ export class GroupMeChannel extends GenericChannel {
             messageText = `<${message.sender}> ${message.messageText}`;
         }
 
+        // don't send an empty message
         if(gmAttachments.length == 0 && message.messageText.length==0)
             return;
     
+        // create the http request
         let options = {
             method: 'POST',
             uri: 'https://api.groupme.com/v3/bots/post',
@@ -44,6 +47,7 @@ export class GroupMeChannel extends GenericChannel {
             json: true
         };
 
+        // send the message over http
         return request(options);
     }
 }

@@ -5,16 +5,22 @@ import { DiscordChannel } from './channel/DiscordChannel';
 import { DiscordClient } from './client/DiscordClient';
 import { GroupMeChannel } from './channel/GroupMeChannel';
 import { GroupMeClient } from './client/GroupMeClient';
+import { ErrorHandler } from './util/ErrorHandler';
 
 let linker : ChannelLinker;
 
-(async ()=>{
-    let groupMeClient = new GroupMeClient(config.listenPort, config.groupme.callbackURL);
-    let discordClient = await DiscordClient.connect(config.discord.token);
+let errorHandler : ErrorHandler = console.error;
 
+(async ()=>{
+
+    // initialize the clients
+    let groupMeClient = new GroupMeClient(config.listenPort, config.groupme.callbackURL, errorHandler);
+    let discordClient = await DiscordClient.connect(config.discord.token, errorHandler);
 
     linker = new ChannelLinker(discordClient, groupMeClient);
 
+
+    // for each bridge ...
     await Promise.all(config.bridges.map(async server=>{
         let discordChannelId : ChannelIdentifier<DiscordChannel> = {
             guildId: server.discord.guildId,
@@ -26,7 +32,8 @@ let linker : ChannelLinker;
             channelId: server.groupme.groupId
         };
 
+        // ... link the two channels on the bridge
         await linker.link(discordChannelId, groupMeChannelId);
     }));
 
-})().catch(console.error);
+})().catch(errorHandler);

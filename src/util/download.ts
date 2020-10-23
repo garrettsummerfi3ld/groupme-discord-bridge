@@ -14,6 +14,7 @@ try {
     // Already exists
 }
 
+/** Downloads from a URL into a specified file */
 export async function download(url: string, filename: string): Promise<DownloadResults> {
     return new Promise((resolve) => {
         request.head(url, (err: string, res: any, body: any) => {
@@ -25,6 +26,20 @@ export async function download(url: string, filename: string): Promise<DownloadR
                 downloadLocation
             }));
 
+        });
+    });
+}
+
+export async function getFileSize(pathname: string):Promise<Number>{
+    return new Promise((resolve, reject)=>{
+        // get a "stat" object corresponding to the file in the filesystem
+        fs.stat(pathname, async (err, stats) => {
+            if (err) {
+                reject(err);
+            }
+
+            // return the size (stats.size)
+            resolve(stats.size);
         });
     });
 }
