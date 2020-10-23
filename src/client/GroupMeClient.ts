@@ -25,10 +25,12 @@ export class GroupMeClient extends GenericClient<GroupMeChannel>{
         this.expressApp.use(bodyParser.json());
         this.expressApp.listen(port, () => console.log("Listening for GroupMe messages on port " + port));
 
+        /*
         // await each new message from the GroupMe server
         this.expressApp.post(callbackURL, (req, res) => {
             this.handleIncomingMessage(req).catch(errorHandler);
         });
+        */
     }
 
     /** called any time anybody sends a message on any groupme group our bots are in */

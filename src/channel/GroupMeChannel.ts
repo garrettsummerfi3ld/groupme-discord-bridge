@@ -2,8 +2,15 @@ import { promises } from "fs";
 import { AttachmentGroupMePayload } from "./Attachment";
 import { MessagePayload } from "./MessagePayload";
 import { GenericChannel } from "./GenericChannel";
+import { Console } from "console";
 
 const request = require("request-promise");
+
+type MessagePostRequestBody = {
+    bot_id: string,
+    text: string,
+    attachments?: [AttachmentGroupMePayload?]
+};
 
 export class GroupMeChannel extends GenericChannel {
 
@@ -23,31 +30,45 @@ export class GroupMeChannel extends GenericChannel {
             message.attachments.map(attachment => attachment.uploadToGroupMe())
         );
 
+        // don't send an empty message
+        if (gmAttachments.length == 0 && message.messageText.length == 0)
+            return;
+
+        // create one message per attachment
+        // (you can't send multiple images per message using the groupme api)
+        let gmMessages: MessagePostRequestBody[] = gmAttachments.map(x => ({
+            bot_id: this.botId,
+            text: "",
+            attachments: [x]
+        }));
+
         // create the text part of the message
         let messageText = "";
-        if(message.messageText.length == 0){
+        if (message.messageText.length == 0) {
             messageText = `<${message.sender} sent an image>`;
-        }else{
+        } else {
             messageText = `<${message.sender}> ${message.messageText}`;
         }
 
-        // don't send an empty message
-        if(gmAttachments.length == 0 && message.messageText.length==0)
-            return;
-    
-        // create the http request
-        let options = {
-            method: 'POST',
-            uri: 'https://api.groupme.com/v3/bots/post',
-            body: {
+        // put the text on the last message, or create a new message if there are no attachments
+        if(gmMessages.length > 0)
+            gmMessages[gmMessages.length-1].text = messageText
+        else
+            gmMessages.push({
                 bot_id: this.botId,
                 text: messageText,
-                attachments: gmAttachments.length==0 ? undefined : gmAttachments
-            },
-            json: true
-        };
+            });
 
-        // send the message over http
-        return request(options);
+        // send each message sequentially
+        for(let gmMessage of gmMessages){
+            let options = {
+                method: 'POST',
+                uri: 'https://api.groupme.com/v3/bots/post',
+                body: gmMessage,
+                json: true
+            };
+
+            await request(options);
+        }
     }
 }
