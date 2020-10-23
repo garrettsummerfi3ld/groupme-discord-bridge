@@ -24,6 +24,7 @@ export type AttachmentDiscordPayload= {
 const IMAGE_EXT = ["jpeg", "jpg", "png", "gif"];
 
 export function attachmentIsImage(attachment: {url: string}) : boolean{
+    console.log(attachment.url);
     return IMAGE_EXT.some(x => attachment.url.endsWith(x));
 }
 
@@ -35,8 +36,6 @@ export class AttachmentData {
 
     /** This constructor will throw errors for non-image attachments! */
     public constructor(attachment: MessageAttachment | {url: string; }){
-
-        console.log(attachment.url);
 
         // if it isn't an image, throw an error
         if (!attachmentIsImage(attachment)) {
